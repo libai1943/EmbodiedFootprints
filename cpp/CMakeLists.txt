@@ -1,0 +1,28 @@
+cmake_minimum_required(VERSION 3.16)
+project(embodied_footprints LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+# Configure: cmake -S cpp -B build -Dcasadi_DIR=/path/to/casadi/cmake
+# Build: cmake --build build --config Release
+# Run: build/embodied_footprints --case 3 --linear-solver mumps
+# MA27 may be selected with --linear-solver ma27 and HSL_LIBRARY in the environment.
+find_package(casadi CONFIG REQUIRED)
+add_library(rigid_search SHARED IMPORTED)
+if(WIN32)
+  set_target_properties(rigid_search PROPERTIES IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/windows-x86_64/rigid_search.dll" IMPORTED_IMPLIB "${CMAKE_CURRENT_SOURCE_DIR}/lib/windows-x86_64/librigid_search.dll.a")
+else()
+  set_target_properties(rigid_search PROPERTIES IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/linux-x86_64/librigid_search.so")
+endif()
+add_executable(embodied_footprints src/main.cpp)
+target_compile_features(embodied_footprints PRIVATE cxx_std_17)
+target_link_libraries(embodied_footprints PRIVATE casadi::casadi rigid_search)
+target_compile_definitions(embodied_footprints PRIVATE EF_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
+if(MINGW)
+  target_link_options(embodied_footprints PRIVATE -static-libgcc -static-libstdc++)
+endif()
+if(WIN32)
+  add_custom_command(TARGET embodied_footprints POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:rigid_search> $<TARGET_FILE_DIR:embodied_footprints>)
+endif()
+enable_testing()
+add_test(NAME original_case_3 COMMAND embodied_footprints --case 3 --output validation_case_3)
