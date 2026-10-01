@@ -1,0 +1,9 @@
+reset;
+model EmbodiedFootprint.mod;
+include initial_guess.dat;
+option solver ipopt;
+solve;
+printf "%d %.17g\n", solve_result_num, sum{i in 1..Nfe-1}dt[i] > "status.txt";
+printf {i in 1..Nfe} "%.17g %.17g %.17g %.17g %.17g %.17g %.17g %.17g\n", x[i],y[i],theta[i],v[i],a[i],phi[i],w[i],dt[i] > "trajectory.txt";
+close "status.txt";
+close "trajectory.txt";

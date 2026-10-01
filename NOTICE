@@ -1,0 +1,5 @@
+Required Notice: Copyright 2023-2026 Bai Li. https://github.com/libai1943/EmbodiedFootprints
+Required Notice: Companion code for Chapter 11 of the Chinese-language book 非结构化场景自动驾驶轨迹规划技术 (English title translation: Trajectory Planning Techniques for Autonomous Driving in Unstructured Environments).
+Required Notice: Research using this implementation should cite Bai Li et al., Embodied Footprints: A Safety-Guaranteed Collision-Avoidance Model for Numerical Optimization-Based Trajectory Planning, IEEE Transactions on Intelligent Transportation Systems, 25(2), 2046-2060, 2024. DOI:10.1109/TITS.2023.3316175.
+
+PolyForm Noncommercial 1.0.0 applies to this project's source and protected P-code components. External dependencies retain their own licenses.

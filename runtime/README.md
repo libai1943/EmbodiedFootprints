@@ -1,0 +1,1 @@
+Place your licensed AMPL installation, IPOPT solver and compatible runtime libraries here, or set MATLAB's EF_SOLVER_DIR environment variable to their installation directory. The default IPOPT linear solver is MA27. Third-party binaries and license files are not distributed in this repository.
