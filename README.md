@@ -1,6 +1,8 @@
 # Embodied Footprints / 具身足迹
 
-本仓库是中文图书 **《非结构化场景自动驾驶轨迹规划技术》** 第十一章“基于具身足迹理论的避障约束离散化误差消除方法”的配套 MATLAB 示例，依据作者的历史研究代码整理。
+[下载 ZIP](https://github.com/libai1943/EmbodiedFootprints/archive/refs/heads/main.zip) · [从这里开始](#选择实现) · [阅读指南](#文件与函数说明)
+
+本仓库是中文图书 **《非结构化场景自动驾驶轨迹规划技术》** 第十一章“基于具身足迹理论的避障约束离散化误差消除方法”的配套轨迹规划示例，依据作者的历史研究代码整理。
 
 English title translation: *Trajectory Planning Techniques for Autonomous Driving in Unstructured Environments*. **The book is written in Chinese.** This repository accompanies Chapter 11 and implements the embodied-footprint model and its optimization-based trajectory planner.
 
@@ -25,7 +27,24 @@ English title translation: *Trajectory Planning Techniques for Autonomous Drivin
 
 可选动画仅在 MATLAB 窗口中播放，不提供录制、视频编码、GIF 或文件导出接口。静态绘图源码开放；动画与混合 A* 仅提供 P-code。
 
-## 一键运行
+## 选择实现
+
+| 想做的事 | 入口 | 结果 |
+| --- | --- | --- |
+| 对照书中推导，查看轨迹和某个时间区间的足迹覆盖 | [MATLAB 示例](RunMe.m)，依赖见下文 | 两张静态图、数值解、求解日志与独立验证结果 |
+| 批量读取轨迹，或把结果送入自己的分析程序 | [C++17 实现](cpp/src/main.cpp)，采用 CasADi/IPOPT 和随附搜索库 | 每个配置点的时间、状态和控制量写入 `trajectory.csv` |
+
+**C++ 示例。** 在仓库根目录运行下列命令。示例按 Linux x86-64 单配置构建编写，需 CMake 3.16 或更高版本、C++17 编译器，以及带 IPOPT 插件的 CasADi C++ 开发包。将 `casadi_DIR` 改为本机包含 CasADi CMake 包配置文件的目录。
+
+```sh
+cmake -S cpp -B build -Dcasadi_DIR=/path/to/casadi/cmake
+cmake --build build --config Release
+./build/embodied_footprints --case 3 --linear-solver mumps --output results/cpp_case_3
+```
+
+程序从 `cpp/data/case_3.txt` 读取场景，完成搜索、初值构造、优化和独立校验后写入 CSV。查看终端的 `independent_validation=passed`、`nodes` 与 `duration` 可核对这次结果。C++ 示例默认使用 MUMPS，下面的 MATLAB 示例按论文配置使用 MA27。
+
+## MATLAB 一键运行
 
 完成下文依赖配置后，在 MATLAB 打开仓库根目录，修改 [`RunMe.m`](RunMe.m) 中：
 
